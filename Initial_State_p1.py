@@ -3,19 +3,13 @@ import genetic_algo as ga
 
 
 class Puzzle1:
-    def __init__(self, arr):
-    def self.original_list = arr
-
-    def print(self):
-        for num in self.original_list:
-            print(num)
+    def __init__(self):
+        pass
 
 
 if __name__ == "__main__":
-    a_puzzle = Puzzle1(fr.read_puzzle1())
-    a_puzzle.print()
-    result = ga.calculate_fitness(a_puzzle.original_list)
-    print(result)
+    a_puzzle = Puzzle1()
+
 
 # Code to generate starting population:
 def generate_population(pop_size, start_array):

@@ -1,5 +1,7 @@
 import random
 
+from Sample import Sample
+
 
 def calculate_fitness(cur_sample):
     bin1_product = 1  # This is set to 1, for the multiplication.
@@ -37,18 +39,48 @@ def selection():
     pass
 
 
-def crossover(array1, array2):
-    # split only on the first 10 because multiplication dominates the fitness
-    split_point = random.randint(0, 39)
+def crossover(sample1, sample2):
+    # after split, each should contain no less than 2 elements
+    split_point = random.randint(2, 38)
     out_1 = []
     out_2 = []
+
+    a1 = set(sample1.representation[0:split_point])
+    a2 = set(sample1.representation[split_point:])
+
+    b1 = set(sample2.representation[0:split_point])
+    b2 = set(sample2.representation[split_point:])
+
+    # use set to find intersection. If the index belongs to the set, ignores
+
+    intersection_1 = a1.intersection(b2)
+    intersection_2 = a2.intersection(b1)
+
+    index_to_be_ignored = []
+    for duplicate in intersection_1:
+        cur_index = sample1.index_map[duplicate]
+        index_to_be_ignored.append(cur_index)
+
+    for duplicate in intersection_2:
+        cur_index = sample2.index_map[duplicate]
+        index_to_be_ignored.append(cur_index)
+
+    index_to_be_ignored_set = set(index_to_be_ignored)
+
     for i in range(0, split_point):
-        out_1[i] = array2[i]
-        out_2[i] = array1[i]
-    for j in range(split_point, len(array1)):
-        out_1[j] = array1[j]
-        out_2[j] = array1[j]
-    return out_1, out_2
+        if i not in index_to_be_ignored_set:
+            out_1[i] = sample2.representation[i]
+            out_2[i] = sample1.representation[i]
+        else:
+            out_1[i] = sample1.representation[i]
+            out_2[i] = sample2.representation[i]
+    for j in range(split_point, len(sample1.representation)):
+        out_1[j] = sample1.representation[j]
+        out_2[j] = sample2.representation[j]
+
+    child_1 = Sample(out_1)
+    child_2 = Sample(out_2)
+    return child_1, child_2
 
 
 def crossover1(array):
