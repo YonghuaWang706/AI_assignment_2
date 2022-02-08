@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class ChildPuzzle1 {
     ArrayList<Float> representation;
@@ -43,5 +44,27 @@ public class ChildPuzzle1 {
 
     public float getNumberGivenIndex(int index){
         return representation.get(index);
+    }
+
+
+    public void mutate() {
+        Random random = new Random(System.currentTimeMillis());
+        float probability = random.nextFloat();
+
+        int p1 = 0;
+        int p2 = 0;
+        if (probability < 0.05) {
+            p1 = random.nextInt(40);
+            p2 = random.nextInt(40);
+            while (p2 == p1) {
+                p2 = random.nextInt(40);
+            }
+        }
+        float temp = representation.get(p1);
+        indexMap.put(representation.get(p2), p1);
+        indexMap.put(temp, p2);
+        representation.set(p1, representation.get(p2));
+        representation.set(p2, temp);
+
     }
 }

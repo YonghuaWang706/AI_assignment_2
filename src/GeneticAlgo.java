@@ -45,7 +45,6 @@ public class GeneticAlgo {
         }
 
         return new CrossoverResult(new ChildPuzzle1(out1), new ChildPuzzle1(out2));
-
     }
 
 
