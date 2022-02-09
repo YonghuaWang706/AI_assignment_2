@@ -8,19 +8,9 @@ import java.util.Set;
 
 public class FileManipulation {
 
-    public static ArrayList<Float> originalList;
-
-    static{
-        try {
-            originalList = readInputP1();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static ArrayList<Float> readInputP1() throws IOException {
+    public static ArrayList<Float> readInputP1(String inputPath) throws IOException {
         ArrayList<Float> numbers = new ArrayList<>();
-        File file = new File("src/puzzle1.txt");
+        File file = new File(inputPath);
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String str = "";
@@ -43,17 +33,23 @@ public class FileManipulation {
         bufferedWriter.close();
     }
 
-
-    public static void main(String[] args) throws IOException {
-
-        ArrayList<Float> floats;
-        Set<Float> set;
-        do {
-            generateRandomInputP1();
-            floats = readInputP1();
-            set = new HashSet<>(floats);
-            System.out.println(floats.size());
-            System.out.println(set.size());
-        } while (floats.size() != set.size());
+    public static ArrayList<Piece> readInputP2(String inputPath) throws IOException {
+        ArrayList<Piece> pieces = new ArrayList<>();
+        File file = new File(inputPath);
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String str = "";
+        while((str = bufferedReader.readLine()) != null){
+            String[] attributes = str.split("\t");
+            Piece cur = new Piece(attributes[0], getIntFromString(attributes[1]), getIntFromString(attributes[2]), getIntFromString(attributes[3]));
+            pieces.add(cur);
+        }
+        return pieces;
     }
+
+
+    public static int getIntFromString(String s){
+        return Integer.getInteger(s);
+    }
+
 }

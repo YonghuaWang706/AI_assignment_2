@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class ChildPuzzle1 {
+public class ChildPuzzle1 implements ChildBehaviorI<ChildPuzzle1>{
     ArrayList<Float> representation;
     HashMap<Float, Integer> indexMap = new HashMap<>();
     float fitness;
@@ -48,7 +48,8 @@ public class ChildPuzzle1 {
 
 
     //mutation, update hashmap as well
-    public ChildPuzzle1 mutate() {
+    @Override
+    public void mutate() {
         Random random = new Random(System.currentTimeMillis());
         float probability = random.nextFloat();
 
@@ -66,6 +67,51 @@ public class ChildPuzzle1 {
         indexMap.put(temp, p2);
         representation.set(p1, representation.get(p2));
         representation.set(p2, temp);
-        return this;
+    }
+
+    @Override
+    public CrossoverResult<ChildPuzzle1> crossover(ChildPuzzle1 other){
+        Random random = new Random(System.currentTimeMillis());
+        int splitPoint = random.nextInt(38) + 1; //at more left 1, right most 38
+        ArrayList<Integer> duplicateIndex1 = new ArrayList<>();
+        ArrayList<Integer> duplicateIndex2 = new ArrayList<>();//index to be refilled with missing number
+        ArrayList<Float> duplicateValue1 = new ArrayList<>();//values to be added back
+        ArrayList<Float> duplicateValue2 = new ArrayList<>();
+
+        ArrayList<Float> out1 = new ArrayList<>();
+        ArrayList<Float> out2 = new ArrayList<>();
+        for (int i = 0; i < splitPoint; i++) {
+            float cur1 = other.getNumberGivenIndex(i);
+            float cur2 = this.getNumberGivenIndex(i);
+            out1.add(cur1);
+            out2.add(cur2);
+            //check duplicate -> if the exchanged number appear after split point
+            int originalPosition1 = this.getIndexOfNumber(cur1);
+            int originalPosition2 = other.getIndexOfNumber(cur2);
+            if(originalPosition1 >= splitPoint){//same number appears at right side of split point, duplicate!
+                duplicateIndex1.add(originalPosition1);// the index of the original number becomes a new slot to be filled in(the number already appear on the left side
+                duplicateValue2.add(cur1);// the other array now lacks that value due to crossover
+            }
+            if(originalPosition2 >= splitPoint){//same number appears at right side of split point, duplicate!
+                duplicateIndex2.add(originalPosition2);// the index of the original number becomes a new slot to be filled in(the number already appear on the left side
+                duplicateValue1.add(cur2);// the other array now lacks that value due to crossover
+            }
+        }
+        for (int i = splitPoint; i < 40; i++) {
+            out1.add(this.getNumberGivenIndex(i));
+            out2.add(other.getNumberGivenIndex(i));
+        }
+
+        int duplicateNum = duplicateIndex1.size();
+        for (int i = 0; i < duplicateNum; i++) {
+            out1.set(duplicateIndex1.get(i), duplicateValue1.get(i));
+            out2.set(duplicateIndex2.get(i), duplicateValue2.get(i));
+        }
+
+        ChildPuzzle1 c1 = new ChildPuzzle1(out1);
+        ChildPuzzle1 c2 = new ChildPuzzle1(out2);
+        c1.mutate();
+        c2.mutate();
+        return new CrossoverResult<>(c1, c2);
     }
 }

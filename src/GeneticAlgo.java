@@ -6,11 +6,14 @@ public class GeneticAlgo {
     float maxFitnessAfter = 0;
     int totalRounds = 0;
     int currentRound = 0;
+    long secondsToRun = 0;
+    long startTime = 0;
 
-    public GeneticAlgo(Puzzle1 instance, int totalRounds) {
+    public GeneticAlgo(Puzzle1 instance, int totalRounds, long secondsToRun) {
         this.instance = instance;
         maxFitnessBefore = instance.previousMaxScore;
         this.totalRounds = totalRounds;
+        this.secondsToRun = secondsToRun;
     }
 
     /*
@@ -25,11 +28,12 @@ public class GeneticAlgo {
 
      */
     public void runGeneticAlgo() throws Exception {
+        startTime = System.currentTimeMillis()/ 1000;
         while(!finished()){
             currentRound++;
             System.out.println("iteration " +currentRound);
-            instance.elitism(2);
-            instance.culling(2);
+            instance.elitism(0);
+            instance.culling(0);
             instance.updateTable();
             System.out.println("after culling");
             while(!instance.nextPopulationIsFull()){
@@ -37,20 +41,22 @@ public class GeneticAlgo {
             }
             System.out.println("produce next generation");
             instance.switchPopulation();
-            maxFitnessAfter = instance.findMaxScore();
+            maxFitnessAfter = instance.previousMaxScore;
             instance.printFitnessOfPopulation();
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Puzzle1 puzzle1 = new Puzzle1(6);
-        GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle1, 2);
+        Puzzle1 puzzle1 = new Puzzle1(12);
+        GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle1, 5, 10);
         geneticAlgo.runGeneticAlgo();
         geneticAlgo.printResult();
     }
 
     public Boolean finished(){
-        return currentRound == totalRounds || maxFitnessBefore == maxFitnessAfter;
+        long currentTime = System.currentTimeMillis()/1000;
+        long haveRan = currentTime - startTime;
+        return currentRound == totalRounds || maxFitnessBefore == maxFitnessAfter || haveRan >= secondsToRun;
     }
 
     public void printResult(){
