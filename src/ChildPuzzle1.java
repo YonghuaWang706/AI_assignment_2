@@ -47,7 +47,8 @@ public class ChildPuzzle1 {
     }
 
 
-    public void mutate() {
+    //mutation, update hashmap as well
+    public ChildPuzzle1 mutate() {
         Random random = new Random(System.currentTimeMillis());
         float probability = random.nextFloat();
 
@@ -65,6 +66,6 @@ public class ChildPuzzle1 {
         indexMap.put(temp, p2);
         representation.set(p1, representation.get(p2));
         representation.set(p2, temp);
-
+        return this;
     }
 }
