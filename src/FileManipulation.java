@@ -1,9 +1,7 @@
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 
 public class FileManipulation {
@@ -27,7 +25,7 @@ public class FileManipulation {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         Random random = new Random(System.currentTimeMillis());
         for (int i = 0; i < 40; i++) {
-            bufferedWriter.write(String.valueOf(df.format(random.nextFloat() * 20 -10)) + "\n");
+            bufferedWriter.write(df.format(random.nextFloat() * 20 - 10) + "\n");
         }
         bufferedWriter.flush();
         bufferedWriter.close();
@@ -47,9 +45,8 @@ public class FileManipulation {
         return pieces;
     }
 
-
     public static int getIntFromString(String s){
-        return Integer.getInteger(s);
+        return Integer.parseInt(s.trim());
     }
 
 }

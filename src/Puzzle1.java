@@ -36,7 +36,7 @@ public class Puzzle1 implements GeneticBehavior{
 
     //Sort the list based on fitness in decreasing order
     @Override
-    public void  findMaxScore(){
+    public void findMaxScore(){
         previousPopulation.sort((o1, o2) -> Float.compare(o2.fitness, o1.fitness));
         float ret = previousPopulation.get(0).fitness;
         this.previousMaxScore = ret;
@@ -57,6 +57,11 @@ public class Puzzle1 implements GeneticBehavior{
         for (int i = 1; i < size; i++) {
             fitnessTable[i] = ((fitnessTable[i] / sum) + fitnessTable[i - 1]);
         }
+    }
+
+    @Override
+    public float getMaxFitness() {
+        return previousMaxScore;
     }
 
     public static void main(String[] args) throws IOException {
@@ -114,7 +119,7 @@ public class Puzzle1 implements GeneticBehavior{
 
     @Override
     public boolean nextPopulationIsFull(){
-        return nextPopulation.size() == populationSize;
+        return nextPopulation.size() >= populationSize;
     }
 
     @Override

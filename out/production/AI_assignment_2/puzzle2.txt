@@ -1,0 +1,4 @@
+Lookout	1	1	1
+Wall	4	3	1
+Wall	4	3	2
+Door	4	6	2

@@ -17,4 +17,8 @@ public interface GeneticBehavior {
     boolean nextPopulationIsFull();
     //print fitness of all children for debugging
     void printFitnessOfPopulation();
+
+    void updateTable();
+
+    float getMaxFitness();
 }

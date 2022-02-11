@@ -1,7 +1,6 @@
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Puzzle2 implements GeneticBehavior{
     ArrayList<Tower> previousPopulation;//8?
@@ -10,7 +9,6 @@ public class Puzzle2 implements GeneticBehavior{
     Random random = new Random(System.currentTimeMillis());
     int populationSize;
     float[] fitnessTable;
-
 
     public Puzzle2(int populationSize) throws IOException {
         this.previousPopulation = new ArrayList<>();
@@ -26,12 +24,33 @@ public class Puzzle2 implements GeneticBehavior{
     @Override
     public void initialize() throws IOException {
         ArrayList<Piece> initialSample = FileManipulation.readInputP2("src/puzzle2.txt");
+        System.out.println("initialize");
         for (int i = 0; i < populationSize; i++) {
             ArrayList<Piece> curSample = new ArrayList<>(initialSample);
             Collections.shuffle(curSample,random);
-//            Tower tower = new Tower(curSample);
-//            previousPopulation.add(tower);
+            Tower curTower = constructTowerInstance(curSample);
+            boolean findValidTower = curTower.isTowerLegal();
+            while(!findValidTower){
+                curTower = constructTowerInstance(curSample);
+                System.out.println("invalid tower");
+            }
+            System.out.println("found one");
+            return;
+//            previousPopulation.add(curTower);
         }
+    }
+    
+    public Tower constructTowerInstance(ArrayList<Piece> rawPieces) {
+        ArrayList <Piece> materials = new ArrayList<>(rawPieces);
+        ArrayList<Piece> pieces_selected = new ArrayList<>();
+        int total_pieces = rawPieces.size();
+        int tower_height = ThreadLocalRandom.current().nextInt(2, total_pieces);
+        for (int i = 0; i < tower_height; i++) {
+            int nextPieceIndex = random.nextInt(materials.size());
+            pieces_selected.add(rawPieces.get(nextPieceIndex));
+            materials.remove(nextPieceIndex);
+        }
+        return new Tower(pieces_selected);
     }
 
     //Sort the list based on fitness in decreasing order
@@ -74,13 +93,19 @@ public class Puzzle2 implements GeneticBehavior{
             secondIndex = locateIndexGivenRandom(second);
         }
         CrossoverResult<Tower> result = previousPopulation.get(firstIndex).crossover(previousPopulation.get(secondIndex));
-        nextPopulation.add(result.child1);
-        nextPopulation.add(result.child2);
+        Tower t1 = result.child1;
+        Tower t2 = result.child2;
+        if(t1.isTowerLegal()){
+            nextPopulation.add(t1);
+        }
+        if(t2.isTowerLegal()){
+            nextPopulation.add(t2);
+        }
     }
 
     public int locateIndexGivenRandom(float rand) throws Exception {
         for (int i = 0; i < populationSize; i++) {
-            if(rand <= fitnessTable[i]){
+            if (rand <= fitnessTable[i]) {
                 return i;
             }
         }
@@ -91,7 +116,7 @@ public class Puzzle2 implements GeneticBehavior{
 
     @Override
     public boolean nextPopulationIsFull(){
-        return nextPopulation.size() == populationSize;
+        return nextPopulation.size() >= populationSize;
     }
 
     @Override
@@ -101,5 +126,26 @@ public class Puzzle2 implements GeneticBehavior{
             System.out.print(tower.getFitness() + "\t");
         }
         System.out.println();
+    }
+
+    @Override
+    public void updateTable(){
+        float sum = 0;
+        int size = previousPopulation.size();
+        float min = previousPopulation.get(size -1).getFitness();
+        for (int i = 0; i < size; i++) {
+            float cur = previousPopulation.get(i).getFitness();
+            fitnessTable[i] = (float) Math.sqrt(cur - min);
+            sum += fitnessTable[i];
+        }
+        fitnessTable[0] = fitnessTable[0] / sum;
+        for (int i = 1; i < size; i++) {
+            fitnessTable[i] = ((fitnessTable[i] / sum) + fitnessTable[i - 1]);
+        }
+    }
+
+    @Override
+    public float getMaxFitness() {
+        return previousMaxScore;
     }
 }

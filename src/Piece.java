@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 // For Puzzle 2
 public class Piece {
     private String type;
@@ -10,6 +12,22 @@ public class Piece {
         this.width = width;
         this.strength = strength;
         this.cost = cost;
+    }
+
+    @Override
+    public String toString() {
+        return "Piece{" +
+                Objects.hash(type, width, strength, cost) +
+                '}';
+    }
+
+    public Piece(Piece p){
+        this.type = p.type;
+        this.width = p.width;
+        this.strength = p.strength;
+        this.cost = p.cost;
+
+
     }
 
     public String getType() {
@@ -42,5 +60,18 @@ public class Piece {
 
     public void setCost(int newCost) {
         this.cost = newCost;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Piece piece = (Piece) o;
+        return getWidth() == piece.getWidth() && getStrength() == piece.getStrength() && getCost() == piece.getCost() && Objects.equals(getType(), piece.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getType(), getWidth(), getStrength(), getCost());
     }
 }

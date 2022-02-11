@@ -1,7 +1,7 @@
 import java.io.IOException;
 
 public class GeneticAlgo {
-    Puzzle1 instance;
+    GeneticBehavior instance;
     float maxFitnessBefore = 0;
     float maxFitnessAfter = 0;
     int totalRounds = 0;
@@ -9,11 +9,11 @@ public class GeneticAlgo {
     long secondsToRun = 0;
     long startTime = 0;
 
-    public GeneticAlgo(Puzzle1 instance, int totalRounds, long secondsToRun) {
+    public GeneticAlgo(GeneticBehavior instance, int totalRounds, long secondsToRun) {
         this.instance = instance;
-        maxFitnessBefore = instance.previousMaxScore;
         this.totalRounds = totalRounds;
         this.secondsToRun = secondsToRun;
+        maxFitnessBefore = instance.getMaxFitness();
     }
 
     /*
@@ -41,14 +41,14 @@ public class GeneticAlgo {
             }
             System.out.println("produce next generation");
             instance.switchPopulation();
-            maxFitnessAfter = instance.previousMaxScore;
+            maxFitnessAfter = instance.getMaxFitness();
             instance.printFitnessOfPopulation();
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Puzzle1 puzzle1 = new Puzzle1(12);
-        GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle1, 5, 10);
+        Puzzle2 puzzle = new Puzzle2(2);
+        GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle, 5, 10);
         geneticAlgo.runGeneticAlgo();
         geneticAlgo.printResult();
     }
@@ -56,7 +56,7 @@ public class GeneticAlgo {
     public Boolean finished(){
         long currentTime = System.currentTimeMillis()/1000;
         long haveRan = currentTime - startTime;
-        return currentRound == totalRounds || maxFitnessBefore == maxFitnessAfter || haveRan >= secondsToRun;
+        return haveRan >= secondsToRun || currentRound == totalRounds || maxFitnessBefore == maxFitnessAfter;
     }
 
     public void printResult(){
