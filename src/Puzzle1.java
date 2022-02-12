@@ -38,8 +38,7 @@ public class Puzzle1 implements GeneticBehavior{
     @Override
     public void findMaxScore(){
         previousPopulation.sort((o1, o2) -> Float.compare(o2.fitness, o1.fitness));
-        float ret = previousPopulation.get(0).fitness;
-        this.previousMaxScore = ret;
+        this.previousMaxScore = previousPopulation.get(0).fitness;
     }
 
     // calculate the probability to be selected. The last element has
@@ -64,6 +63,10 @@ public class Puzzle1 implements GeneticBehavior{
         return previousMaxScore;
     }
 
+    public float getNumberFromBins(int index) {
+        return previousPopulation.get(0).getNumberGivenIndex(index);
+    }
+
     public static void main(String[] args) throws IOException {
         Puzzle1 puzzle1 = new Puzzle1(6);
         puzzle1.findMaxScore();
@@ -71,7 +74,20 @@ public class Puzzle1 implements GeneticBehavior{
         for (float v : puzzle1.fitnessTable) {
             System.out.println(v);
         }
+
+
     }
+
+    public void printBestChildBin(){
+        System.out.println("Bins (one per line):");
+        for (int i = 0; i < 40; i++) {
+            System.out.print(getNumberFromBins(i) + " ");
+            if (i == 9 || i == 19 || i == 29) {
+                System.out.print("\n");
+            }
+        }
+    }
+
     @Override
     public void elitism(int toBeSaved){
         for (int i = 0; i < toBeSaved; i++) {

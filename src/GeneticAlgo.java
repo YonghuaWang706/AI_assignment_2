@@ -42,13 +42,14 @@ public class GeneticAlgo {
             System.out.println("produce next generation");
             instance.switchPopulation();
             maxFitnessAfter = instance.getMaxFitness();
+            instance.findMaxScore();
             instance.printFitnessOfPopulation();
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Puzzle2 puzzle = new Puzzle2(2);
-        GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle, 5, 10);
+        GeneticBehavior puzzle = new Puzzle2(2);
+        GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle, 10, 10);
         geneticAlgo.runGeneticAlgo();
         geneticAlgo.printResult();
     }
@@ -56,7 +57,7 @@ public class GeneticAlgo {
     public Boolean finished(){
         long currentTime = System.currentTimeMillis()/1000;
         long haveRan = currentTime - startTime;
-        return haveRan >= secondsToRun || currentRound == totalRounds || maxFitnessBefore == maxFitnessAfter;
+        return haveRan >= secondsToRun || currentRound == totalRounds;
     }
 
     public void printResult(){

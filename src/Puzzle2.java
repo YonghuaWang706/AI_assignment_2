@@ -20,23 +20,23 @@ public class Puzzle2 implements GeneticBehavior{
         printFitnessOfPopulation();
     }
 
-    //initialize the population from inout, should only call once
+    //initialize the population from input, should only call once
     @Override
     public void initialize() throws IOException {
         ArrayList<Piece> initialSample = FileManipulation.readInputP2("src/puzzle2.txt");
         System.out.println("initialize");
         for (int i = 0; i < populationSize; i++) {
             ArrayList<Piece> curSample = new ArrayList<>(initialSample);
-            Collections.shuffle(curSample,random);
+//            Collections.shuffle(curSample,random);
             Tower curTower = constructTowerInstance(curSample);
             boolean findValidTower = curTower.isTowerLegal();
             while(!findValidTower){
                 curTower = constructTowerInstance(curSample);
-                System.out.println("invalid tower");
+                findValidTower= curTower.isTowerLegal();
+                // System.out.println("invalid tower");
             }
             System.out.println("found one");
-            return;
-//            previousPopulation.add(curTower);
+            previousPopulation.add(curTower);
         }
     }
     
@@ -44,10 +44,11 @@ public class Puzzle2 implements GeneticBehavior{
         ArrayList <Piece> materials = new ArrayList<>(rawPieces);
         ArrayList<Piece> pieces_selected = new ArrayList<>();
         int total_pieces = rawPieces.size();
-        int tower_height = ThreadLocalRandom.current().nextInt(2, total_pieces);
+        //random.nextInt(total_pieces -2) +2;
+        int tower_height = 2;
         for (int i = 0; i < tower_height; i++) {
             int nextPieceIndex = random.nextInt(materials.size());
-            pieces_selected.add(rawPieces.get(nextPieceIndex));
+            pieces_selected.add(materials.get(nextPieceIndex));
             materials.remove(nextPieceIndex);
         }
         return new Tower(pieces_selected);

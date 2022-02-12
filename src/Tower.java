@@ -91,7 +91,7 @@ public class Tower implements ChildBehaviorI<Tower> {
         // Randomly swap any two pieces of the tower other than the top and bottom
         Random random = new Random();
         float probability = random.nextFloat();
-        if (probability <= 1){
+        if (probability <= 0.2){
             int minIndex = 1; // exclude bottom
             int maxIndex = getTowerHeight() - 2; // exclude top
             int firstIndex = minIndex + random.nextInt((maxIndex - minIndex)) + 1;
