@@ -12,20 +12,20 @@ public class Puzzle1 implements GeneticBehavior{
     float[] fitnessTable;
 
 
-    public Puzzle1(int populationSize) throws IOException {
+    public Puzzle1(int populationSize, String path) throws IOException {
         this.previousPopulation = new ArrayList<>();
         this.nextPopulation = new ArrayList<>();
         this.populationSize = populationSize;
         fitnessTable = new float[populationSize];
-        initialize();
+        initialize(path);
         findMaxScore();
         printFitnessOfPopulation();
     }
 
     //initialize the population from inout, should only call once
     @Override
-    public void initialize() throws IOException {
-        ArrayList<Float> initialSample = FileManipulation.readInputP1("src/puzzle1.txt");
+    public void initialize(String path) throws IOException {
+        ArrayList<Float> initialSample = FileManipulation.readInputP1(path);
         for (int i = 0; i < populationSize; i++) {
             ArrayList<Float> curSample = new ArrayList<>(initialSample);
             Collections.shuffle(curSample,random);
@@ -68,7 +68,7 @@ public class Puzzle1 implements GeneticBehavior{
     }
 
     public static void main(String[] args) throws IOException {
-        Puzzle1 puzzle1 = new Puzzle1(6);
+        Puzzle1 puzzle1 = new Puzzle1(6, "src/puzzle1.txt");
         puzzle1.findMaxScore();
         puzzle1.updateTable();
         for (float v : puzzle1.fitnessTable) {

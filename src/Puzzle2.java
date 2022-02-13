@@ -10,20 +10,20 @@ public class Puzzle2 implements GeneticBehavior{
     int populationSize;
     float[] fitnessTable;
 
-    public Puzzle2(int populationSize) throws IOException {
+    public Puzzle2(int populationSize, String path) throws IOException {
         this.previousPopulation = new ArrayList<>();
         this.nextPopulation = new ArrayList<>();
         this.populationSize = populationSize;
         fitnessTable = new float[populationSize];
-        initialize();
+        initialize(path);
         findMaxScore();
         printFitnessOfPopulation();
     }
 
     //initialize the population from input, should only call once
     @Override
-    public void initialize() throws IOException {
-        ArrayList<Piece> initialSample = FileManipulation.readInputP2("src/puzzle2.txt");
+    public void initialize(String path) throws IOException {
+        ArrayList<Piece> initialSample = FileManipulation.readInputP2(path);
         System.out.println("initialize");
         for (int i = 0; i < populationSize; i++) {
             ArrayList<Piece> curSample = new ArrayList<>(initialSample);

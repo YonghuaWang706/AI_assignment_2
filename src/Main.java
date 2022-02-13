@@ -1,4 +1,6 @@
 import java.util.Scanner;
+//import java.io.IOException;
+
 
 public class Main {
 
@@ -21,7 +23,12 @@ public class Main {
             System.out.print("Puzzle duration must be a positive number! Try again: ");
             duration = scan.nextLong();
         }
+        System.out.print("How large of a population (Make it an even number)? ");
+        int population = scan.nextInt();
 
+        if (puzzle == 1) {
+
+        }
         // if puzzle is 1 run Puzzle1(puzzleFile, duration)
         // if puzzle is 2 run Puzzle2(puzzleFile, duration)
 

@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public interface GeneticBehavior {
     // population the population from the initial input, all sample should be legal and valid
-    void initialize()  throws IOException;
+    void initialize(String path)  throws IOException;
     //sort the population based on fitness score
     void findMaxScore();
     //save the top <toBeSaved> sample to next generation

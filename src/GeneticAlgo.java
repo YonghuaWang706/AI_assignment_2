@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Scanner;
 
 public class GeneticAlgo {
     GeneticBehavior instance;
@@ -48,10 +49,41 @@ public class GeneticAlgo {
     }
 
     public static void main(String[] args) throws Exception {
-        GeneticBehavior puzzle = new Puzzle2(2);
-        GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle, 10, 10);
-        geneticAlgo.runGeneticAlgo();
-        geneticAlgo.printResult();
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("Please enter the puzzle number (1 or 2): ");
+        int puzzleNumb = scan.nextInt();
+        if (puzzleNumb < 1 || puzzleNumb > 2) {
+            System.out.println("Puzzle number must be 1 or 2! Exiting...");
+            System.exit(1);
+        }
+
+        System.out.print("What file contains the puzzle information? ");
+        String puzzleFile = scan.next();
+
+        System.out.print("How long should I work on this for (in seconds)? ");
+        long duration = scan.nextLong();
+        while (duration < 0L) {
+            System.out.print("Puzzle duration must be a positive number! Try again: ");
+            duration = scan.nextLong();
+        }
+        System.out.print("How large of a population (Make it an even number)? ");
+        int population = scan.nextInt();
+
+        if (puzzleNumb == 1) {
+            GeneticBehavior puzzle = new Puzzle1(population, puzzleFile);
+            GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle, 1000, duration);
+            geneticAlgo.runGeneticAlgo();
+            geneticAlgo.printResult();
+        }
+        if (puzzleNumb == 2) {
+            GeneticBehavior puzzle = new Puzzle2(population, puzzleFile);
+            GeneticAlgo geneticAlgo = new GeneticAlgo(puzzle, 1000, duration);
+            geneticAlgo.runGeneticAlgo();
+            geneticAlgo.printResult();
+        }
+        scan.close();
+
     }
 
     public Boolean finished(){
